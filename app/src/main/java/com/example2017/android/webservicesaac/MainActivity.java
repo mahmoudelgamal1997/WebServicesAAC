@@ -31,12 +31,16 @@ public class MainActivity extends AppCompatActivity {
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
+        try {
+            txt.setText(userViewModel.getLiveDataVal().getValue().getName());
+        }catch (Exception e){
 
+        }
         userViewModel.getLiveDataVal().observe(this, new Observer<UserData>() {
             @Override
             public void onChanged(@Nullable UserData userData) {
                 Log.e("name",""+userData.getName()+"");
-
+                txt.setText(userData.getName());
             }
         });
 

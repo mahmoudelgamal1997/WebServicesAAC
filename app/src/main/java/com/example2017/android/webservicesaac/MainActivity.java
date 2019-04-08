@@ -12,6 +12,10 @@ import android.widget.TextView;
 import com.example2017.android.webservicesaac.ViewModel.UserViewModel;
 import com.example2017.android.webservicesaac.model.UserData;
 
+import java.util.ArrayList;
+
+import retrofit2.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,20 +36,18 @@ public class MainActivity extends AppCompatActivity {
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         try {
-            txt.setText(userViewModel.getLiveDataVal().getValue().getName());
+            txt.setText(userViewModel.getLiveDataVal().getValue().body().get(0).getName());
         }catch (Exception e){
 
         }
-        userViewModel.getLiveDataVal().observe(this, new Observer<UserData>() {
+        userViewModel.getLiveDataVal().observe(this, new Observer<Response<ArrayList<UserData>>>() {
             @Override
-            public void onChanged(@Nullable UserData userData) {
-                Log.e("name",""+userData.getName()+"");
-                txt.setText(userData.getName());
+            public void onChanged(@Nullable Response<ArrayList<UserData>> arrayListResponse) {
+                txt.setText(arrayListResponse.body().get(0).getName());
+
+                Log.e("name", arrayListResponse.body().get(0).getName());
             }
         });
-
-
-
 
 
     }

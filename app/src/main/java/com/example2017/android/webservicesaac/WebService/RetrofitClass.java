@@ -20,12 +20,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClass {
 
 
+    public static Retrofit retrofit;
     public static Retrofit getRetrofit() {
 
-        return new Retrofit.Builder().baseUrl(APIServices.baseURL)
-                .addConverterFactory(GsonConverterFactory
-                        .create(new Gson()))
-                        .build();
+        if (retrofit==null){
+
+            retrofit =new Retrofit.Builder().baseUrl(APIServices.baseURL)
+                    .addConverterFactory(GsonConverterFactory
+                            .create(new Gson()))
+                    .build();
+        }
+        return retrofit ;
     }
 
     public static APIServices getAPIServices(){
@@ -36,19 +41,18 @@ public class RetrofitClass {
 
 
 
-    public MutableLiveData<UserData> getLiveData(){
+    public MutableLiveData <Response<ArrayList<UserData>>> getLiveData(){
 
-        final MutableLiveData<UserData> allDataLive = new MutableLiveData<>();
-        final UserData AllData=new UserData();
+        final MutableLiveData<Response<ArrayList<UserData>>> allDataLive = new MutableLiveData<>();
+
         APIServices services=RetrofitClass.getAPIServices();
         services.method().enqueue(new Callback<ArrayList<UserData>>() {
             @Override
-            public void onResponse(Call<ArrayList<UserData>> call, Response<ArrayList<UserData>> response) {
+            public void onResponse(Call<ArrayList<UserData>> call, Response<ArrayList<UserData>> response)
+            {
 
+                allDataLive.setValue(response);
 
-                UserData userData=response.body().get(1);
-
-                allDataLive.setValue(userData);
             }
 
             @Override
@@ -59,7 +63,6 @@ public class RetrofitClass {
         });
         return allDataLive;
     }
-
 
 
 }
